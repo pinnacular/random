@@ -58,7 +58,7 @@ end
 -------------------->> Directory Functions <<--------------------
 
 local function GetDirectory()
-	local Directory = "FarmHub"
+	local Directory = "NIGGAHACK"
 	if not isfolder(Directory) then
 		makefolder(Directory)
 	end
@@ -399,11 +399,11 @@ function GetRejoinPrefferedFunction(...)
 		local prefer = {
 			SizeSort = "asc",
 			MinPlayers = 0,
-			MaxPlayers = 0,
+			MaxPlayers = 5,
 			ExcludeFull = true,
 			ExcludeSame = true,
-			MinFps = 55,
-			MaxPing = 190,
+			MinFps = 20,
+			MaxPing = 400,
 			FpsSortWeight = 0,
 			PingSortWeight = 0,
 			SizeSortWeight = 0,
@@ -566,7 +566,7 @@ local function ServerSwitch()
 		ExcludeFull = true,
 		ExcludeSame = true,
 		MinFps = 0,
-		MaxPing = 0,
+		MaxPing = 300,
 		FpsSortWeight = 0,
 		PingSortWeight = 0,
 		SizeSortWeight = 0,
@@ -588,7 +588,7 @@ task.delay(10, function()
 			})
 		end)
 		task.wait(2)
-		task.delay(2, function()
+		task.delay(1, function()
 			Humanoid.Health = 0
 		end)
 		ServerSwitch()
@@ -2260,27 +2260,6 @@ task.spawn(function()
 		end
 	end
 end)
-
--- task.spawn(function()
--- 	local Messages = {
--- 		"h₺₺ps: // farmhub , lol ",
--- 		",gg /farmhub",
--- 	}
--- 	local Messages2 = {
--- 		"Best jailbreak cash method",
--- 		"fayy was here",
--- 		"tempy wrecked this serv",
--- 		"best auto suite for jailbreak"
--- 	}
-
--- 	while wait(3) do
--- 		pcall(function()
--- 			game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(Messages[math.random(1, #Messages)] .. Messages2[math.random(1, #Messages2)], "All")
--- 		end)
--- 	end
--- end)
-
-
 task.spawn(function()
 	if not Settings.AutoBoostFPS then return end
 	Workspace.Terrain.WaterWaveSize = 0
@@ -2405,6 +2384,6 @@ SetStatus("Switching servers..")
 ServerSwitch()
 
 -- failsafe
-task.delay(5, function()
+task.delay(2, function()
 	Humanoid.Health = 0
 end)
