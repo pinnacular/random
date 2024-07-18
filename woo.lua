@@ -1007,8 +1007,14 @@ function FindServer()
 	local Server, Next
 	repeat
    		local Servers = ListServers(Next)
-		Server = Servers.data[1]
+		for i, serv in ipairs(Servers.data) do
+        		if serv.playing < serv.maxPlayers then
+            			Server = serv
+            			break
+        		end
+  		end
 		Next = Servers.nextPageCursor
+
 	until Server
 
 	SetStatus("Found Server! Time: " ..  tostring(tick() - TotalTime):sub(1, 6) .. "s")
