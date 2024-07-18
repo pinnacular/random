@@ -2288,6 +2288,8 @@ end
 
 Humanoid.Died:Connect(function()
 	if not FinishedRendering then
+		SetStatus("Cop killed you, switching servers..")
+		ServerSwitch()
 		return
 	end
 
