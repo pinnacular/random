@@ -1797,13 +1797,7 @@ local function EquipGun(bool)
 	Backpack[SelectedGun].InventoryEquipRemote:FireServer(bool)
 end
 
-repeat
-	task.wait(2)
-	
-	if Player.Team.Name == "Criminal" and FinishedRendering then
-		GetPistol()
-	end
-until Backpack:FindFirstChild(SelectedGun)
+-- maybe i dont call getpistol at all?
 
 -------------------->> idk but robbery callback <<--------------------
 
