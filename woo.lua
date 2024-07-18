@@ -20,7 +20,7 @@ if not LPH_OBFUSCATED then
 	LRM_ScriptName              = "Auto Crate"
 	LRM_SecondsLeft             = math.huge
 	LRM_IsUserPremium           = true
-	LRM_LinkedDiscordID         = "855840079376285727"
+	LRM_LinkedDiscordID         = "1"
 	LRM_TotalExecutions         = 0
 
 	getfenv().LPH_JIT           = function(...) return ... end
