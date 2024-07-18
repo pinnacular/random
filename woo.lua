@@ -745,7 +745,7 @@ end
 
 -------------------->> ServerHop <<--------------------
 
-function GetRejoinPrefferedFunction(...)
+--[[function GetRejoinPrefferedFunction(...)
 	local prnt = print
 	local pcll = pcall
 	local req = (syn or http or {}).request or http_request or request
@@ -992,6 +992,27 @@ function GetRejoinPrefferedFunction(...)
 	end
 
 	RejoinPreferredServer(...)
+end]]
+
+function FindServer()
+	local _ID = game.PlaceId
+	local _SERVERLIST = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", _ID")
+	local TotalTime = tick()
+
+	function ListServers(cursor)
+		local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+		return HttpService:JSONDecode(Raw)
+	end
+		
+	local Server, Next
+	repeat
+   		local Servers = ListServers(Next)
+		Server = Servers.data[1]
+		Next = Servers.nextPageCursor
+	until Server
+
+	SetStatus("Found Server! Time: " ..  tostring(tick() - TotalTime):sub(1, 6) .. "s")
+	TeleportService:TeleportToPlaceInstance(_ID, Server.id, Player)
 end
 
 local Queued = false
@@ -1023,10 +1044,13 @@ local function ServerSwitch()
 				end
 			end
 		]]
+		getgenv().StartingMoney = getgenv().StartingMoney
+		getgenv().StartingTime  = getgenv().StartingTime
+		
 		queue_on_teleport(Queue)
     end
 
-	GetRejoinPrefferedFunction({
+	--[[GetRejoinPrefferedFunction({
 		SizeSort = "asc",
 		MinPlayers = (Settings.SmallServer and 1 or 12),
 		MaxPlayers = (Settings.SmallServer and 12 or 28),
@@ -1040,7 +1064,8 @@ local function ServerSwitch()
 		PrintVerbose = false,
 		PrintPrefixTime = false,
 		PrintUseConsoleWindow = false,
-	})
+	})]]
+	FindServer()
 end
 
 -------------------->> Failed Loading <<--------------------
@@ -2348,8 +2373,6 @@ if RobberyData.Mansion.Open then
 end
 
 SetStatus("No more robberies, finding server..")
-getgenv().StartingMoney = getgenv().StartingMoney
-getgenv().StartingTime  = getgenv().StartingTime
 ServerSwitch()
 
 -- failsafe
