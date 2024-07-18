@@ -39,7 +39,7 @@ if not game:IsLoaded() then
 	task.wait(3) 
 end
 
-local GithubLink = 'https://raw.githubusercontent.com/lethal2/booohooooo/main/farmcash.lua' -- too tired copy pasting same thing
+local GithubLink = 'https://raw.githubusercontent.com/pinnacular/random/main/woo.lua' -- too tired copy pasting same thing
 
 -------------------->> Execution Check <<--------------------
 
@@ -115,7 +115,7 @@ local Settings = {
 	CollectCash                 = true,
 	AutoOpenSafes               = true,
 	SmallServer                 = true,
-	WebhookURL                  = "https://discord.com/api/webhooks/1262871020189122600/mrw3FpUSJGPJj1lj5BD_7C0a76A-IvDFwrXh2-fOKrvZuun2-ZkrWNWJu2AIEUgl3PQd",
+	WebhookURL                  = "",
 }
 
 local SettingsFile = LoadFile("AutoCrateSettings.json")
