@@ -157,11 +157,6 @@ local function SetupCharacter(character)
 	Character = character
 	Humanoid = character:WaitForChild("Humanoid")
 	Root = character:WaitForChild("HumanoidRootPart")
-
-	--[[ moved to line 2341
-	Humanoid.Died:Connect(function()
-		Character, Root, Humanoid = nil, nil, nil
-	end)]]
 end
 
 if Player.Character then
@@ -226,35 +221,6 @@ local function TickToHM(seconds)
 
 	return hours .. "h/" .. minutes .. "m"
 end
-
--------------------->> ServerMoney <<--------------------
-
---[[
--- according to ball, doesnt work
-pcall(function()
-	local MoneyMadeServer = Leaderstats:WaitForChild("Money").Value - MadeBefore
-
- 	if MoneyMadeServer ~= 0 then
- 		local Request = http_request or request or (http and http.request)
-
- 		Request({
-	 		Url = "https://discord.com/api/webhooks/1262871020189122600/mrw3FpUSJGPJj1lj5BD_7C0a76A-IvDFwrXh2-fOKrvZuun2-ZkrWNWJu2AIEUgl3PQd", 
- 			Body = HttpService:JSONEncode({
- 				["content"] = "A user just earned **$" .. FormatCash(MoneyMadeServer) .. " <:cash:1246291552423247892>**"
- 	 		}), 
- 		 	Method = "POST", 
-	 		Headers = {
- 				["Content-Type"] = "application/json",
-		 	}
- 		})
-
- 		Request({
- 		 	Url = "https://discord.com/api/webhooks/1262871020189122600/mrw3FpUSJGPJj1lj5BD_7C0a76A-IvDFwrXh2-fOKrvZuun2-ZkrWNWJu2AIEUgl3PQd" .. tostring(MoneyMadeServer),
- 		 	Method = "GET",
- 		})
- 	end
-end)]]
-
 -------------------->> ServerHop <<--------------------
 
 function GetRejoinPrefferedFunction(...)
