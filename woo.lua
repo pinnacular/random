@@ -2336,7 +2336,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-SetStatus("Switching servers..")
+SetStatus("No more robberies, finding server..")
 ServerSwitch()
 
 -- failsafe
