@@ -1800,6 +1800,17 @@ local function EquipGun(bool)
 end
 
 -- maybe i dont call getpistol at all?
+-- im onto something
+
+if not FinishedLoading then
+	for i,v in pairs(workspace:GetDescendants()) do
+        	if v:IsA("ClickDetector") then
+			if Backpack:FindFirstChild(SelectedGun) then return end
+           			fireclickdetector(v)
+        		end
+   		end
+	end
+end
 
 -------------------->> idk but robbery callback <<--------------------
 
@@ -1842,7 +1853,7 @@ RobberyData.Mansion.Callback = function()
 		return
 	end
 
-	GetPistol()
+	--GetPistol()
 	SetStatus("Starting Mansion..")
 	repeat
 		wait(0.1)
@@ -2162,7 +2173,6 @@ while Humanoid == nil do
 end
 
 IsLoaded = true
-GetPistol()
 
 task.spawn(function()
 	while task.wait(0.01) do
