@@ -1766,15 +1766,15 @@ end
 local SelectedGun = "Pistol"
 local SetIdentity = setidentity or set_thread_identity or setcontext or setthreadcontext or set_thread_context
 
-local function GetPistol()
+--[[local function GetPistol()
 	-- call this when player is crim, otherwise newgen cops are gonna kill us lol
 	-- retrieve guns when player is crim and map finished loading
-    --[[for i,v in pairs(workspace:GetDescendants()) do
+    for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("ClickDetector") then
 			if Backpack:FindFirstChild(SelectedGun) then return end
             fireclickdetector(v)
         end
-    end]]
+    end
 
 	if Backpack:FindFirstChild(SelectedGun) then return end
 
@@ -1785,7 +1785,7 @@ local function GetPistol()
 	firesignal(PlayerGui.GunShopGui.Container.Container.Main.Container.Slider[SelectedGun].Bottom.Action.MouseButton1Down)
 	SetIdentity(8)
 	Modules.GunShopUI.close()
-end
+end]]
 
 local function ShootGun()
 	local CurrentGun = Modules.ItemSystem.GetLocalEquipped()
@@ -2287,8 +2287,8 @@ end
 
 Humanoid.Died:Connect(function()
 	if not FinishedRendering then
-		--SetStatus("Cop killed you, switching servers..")
-		--ServerSwitch()
+		SetStatus("Cop killed you, switching servers..")
+		ServerSwitch()
 		return
 	end
 
