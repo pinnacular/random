@@ -1806,8 +1806,7 @@ if not FinishedLoading then
 	for i,v in pairs(workspace:GetDescendants()) do
         	if v:IsA("ClickDetector") then
 			if Backpack:FindFirstChild(SelectedGun) then return end
-           			fireclickdetector(v)
-        		end
+           		fireclickdetector(v)
    		end
 	end
 end
