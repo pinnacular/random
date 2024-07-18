@@ -221,324 +221,6 @@ local function TickToHM(seconds)
 
 	return hours .. "h/" .. minutes .. "m"
 end
--------------------->> ServerHop <<--------------------
-
-function GetRejoinPrefferedFunction(...)
-	local prnt = print
-	local pcll = pcall
-	local req = (syn or http or {}).request or http_request or request
-	local jsondecode = function(a)
-		return game:GetService("HttpService"):JSONDecode(a)
-	end
-
-	local locale
-	local function TimeString()
-		return DateTime.now():FormatLocalTime("hh:mm:ss.SSS", locale or "en-us")
-	end
-
-	local function TableToString(tbl, delimit, includeNames)
-		tbl = tbl or {}
-		delimit = delimit or ""
-		local txt
-		for i, v in (includeNames and pairs or ipairs)(tbl) do
-			txt = (txt and (string.gsub(txt, "^%s*(.-)%s*$", "%1") .. delimit) or "")
-				.. (includeNames and ("[%s]=%s"):format(tostring(i), tostring(v)) or tostring(v))
-		end
-		return txt or ""
-	end
-
-	local prnt_pref_time
-	local function Prnt(...)
-		local args = { ... }
-		local txt = (prnt_pref_time and (TimeString() .. ": ") or "") .. TableToString(args, " | ")
-		prnt(txt:sub(#txt) ~= "\n" and (txt .. "\n") or txt)
-	end
-
-	local function GetAllServersForPlace(placeId, pref)
-		pref = pref or {}
-		local servers = {}
-		local cont = true
-		local cursor
-		local cnt = 0
-		local min_p, max_p, min_f, max_png
-		local maxPlayers, maxFps, maxPing = 0, 0, 0
-		local function numOrDefZero(val)
-			return val and type(val) == "number" and val > 0 and val or 0
-		end
-		min_p = numOrDefZero(pref.MinPlayers)
-		max_p = numOrDefZero(pref.MaxPlayers)
-		min_f = numOrDefZero(pref.MinFps)
-		max_png = numOrDefZero(pref.MaxPing)
-
-		local rbx_games_url_frmt = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100%s"
-		local cursor_frmt = "&cursor=%s"
-
-		while cont do
-			cont = false
-			local url =
-				rbx_games_url_frmt:format(tostring(placeId), cursor and cursor_frmt:format(tostring(cursor)) or "")
-			local succ_rsp, rsp = pcll(function()
-				return req {
-					Url = url,
-					Method = "GET",
-				}
-			end)
-			if succ_rsp and rsp and rsp.StatusCode and rsp.StatusCode == 200 and rsp.Body then
-				local succ_jsn, jsn = pcll(function()
-					return jsondecode(rsp.Body)
-				end)
-				if succ_jsn and jsn then
-					cursor = jsn.nextPageCursor or nil
-					if jsn.data then
-						cnt = cnt + 1
-						if pref.PrintVerbose then
-							Prnt("Call#", cnt, "NumSvrs_Before", #servers)
-						end
-						for i, v in pairs(jsn.data) do
-							if v and v.id and v.playing ~= nil and v.fps and v.ping and v.maxPlayers then
-								if
-									(min_p > 0 and v.playing < min_p)
-									or (max_p > 0 and v.playing > max_p)
-									or (pref.ExcludeFull and v.playing == v.maxPlayers)
-									or (pref.ExcludeSame and v.id == game.JobId)
-									or (min_f > 0 and v.fps and v.fps < min_f)
-									or (max_png > 0 and v.ping and v.ping > max_png)
-								then
-									continue
-								end
-								v.origord = #servers + 1
-
-								if v.maxPlayers > maxPlayers then
-									maxPlayers = v.maxPlayers
-								end
-								if v.fps > maxFps then
-									maxFps = v.fps
-								end
-								if v.ping > maxPing then
-									maxPing = v.ping
-								end
-								table.insert(servers, v)
-							end
-						end
-						if pref.PrintVerbose then
-							Prnt("Call#", cnt, "NumSvrs_After", #servers)
-						end
-					end
-				elseif not succ_jsn and jsn then
-					Prnt("Response was success, but json decode failed! Url >>>", url)
-					Prnt("ERROR >>>", jsn)
-				else
-					Prnt(
-						"Response was weird wtf! Url >>>",
-						url,
-						"json decode pcall returned",
-						succ_jsn or "nil",
-						jsn or "nil"
-					)
-				end
-			elseif not succ_rsp and rsp then
-				Prnt("General failure wtf! Url >>>", url)
-				Prnt("ERROR >>>", rsp)
-			elseif succ_rsp and rsp then
-				Prnt("Response was NOT success! Url >>>", url)
-				for i, v in pairs(rsp) do
-					Prnt(" - ", i, v)
-				end
-			else
-				Prnt(
-					"WTF SHOULD NOT HAPPEN! Url >>>",
-					url,
-					"request pcall returned >>>",
-					succ_rsp or "nil",
-					"and >>>",
-					rsp or "nil"
-				)
-			end
-			cont = cursor ~= nil
-		end
-		return servers, maxPlayers, maxFps, maxPing
-	end
-
-	local function RejoinPreferredServer(preferences)
-		local tm = tick()
-
-		local prefer = {
-			SizeSort = "asc",
-			MinPlayers = 0,
-			MaxPlayers = 12,
-			ExcludeFull = true,
-			ExcludeSame = true,
-			MinFps = 20,
-			MaxPing = 400,
-			FpsSortWeight = 0,
-			PingSortWeight = 0,
-			SizeSortWeight = 0,
-			PrintVerbose = false,
-			PrintPrefixTime = false,
-		}
-		if preferences and type(preferences) == "table" then
-			for i, v in pairs(preferences) do
-				prefer[i] = v
-			end
-		end
-
-		if prefer.PrintPrefixTime then
-			locale = game:GetService("LocalizationService").RobloxLocaleId
-			prnt_pref_time = true
-		end
-
-		Prnt("Current PlaceId", game.PlaceId)
-		Prnt("Current (Job)ServerId", game.JobId)
-
-		local allSvrs, maxPlayers, maxFps, maxPing = GetAllServersForPlace(game.PlaceId, prefer)
-		Prnt(
-			"Servers Found for PlaceId",
-			game.PlaceId,
-			"NumSvrs",
-			allSvrs and #allSvrs or 0,
-			"Time",
-			tostring(tick() - tm):sub(1, 6)
-		)
-		SetStatus("Found server! Time: ".. tostring(tick() - tm):sub(1, 6))
-		if allSvrs and #allSvrs > 0 then
-			local sortTm = tick()
-			local sort = prefer.SizeSort and type(prefer.SizeSort) == "string" and prefer.SizeSort or "asc"
-			local sort_desc = sort:lower() == "desc"
-			local function numOrDefaultClamp(val)
-				return val and type(val) == "number" and math.clamp(val, 0.01, 1000) or 0.01
-			end
-			local fps_wgt = numOrDefaultClamp(prefer.FpsSortWeight)
-			local png_wgt = numOrDefaultClamp(prefer.PingSortWeight)
-			local size_wgt = numOrDefaultClamp(prefer.SizeSortWeight)
-			local function sortWeight(svr)
-				local sz_wgt
-				if sort_desc then
-					sz_wgt = svr.playing / maxPlayers * size_wgt
-				else
-					sz_wgt = (1 - svr.playing / maxPlayers) * size_wgt
-				end
-				return sz_wgt + svr.fps / maxFps * fps_wgt + (1 - svr.ping / maxPing) * png_wgt
-			end
-			table.sort(allSvrs, function(a, b)
-				local a_w = sortWeight(a)
-				local b_w = sortWeight(b)
-				if a_w > b_w then
-					return true
-				elseif a_w == b_w then
-					return a.origord < b.origord
-				else
-					return false
-				end
-			end)
-
-			if prefer.PrintVerbose then
-				for i, v in ipairs(allSvrs) do
-					Prnt("SORT", i, v.id, "playing", v.playing, "fps", v.fps, "ping", v.ping)
-				end
-			end
-
-			if prefer.PrintVerbose then
-				Prnt("Sort Time", tick() - sortTm)
-			end
-			local function RandomizeTable(tbl)
-				local returntbl = {}
-				if tbl[1] ~= nil then
-					for i = 1, #tbl do
-						table.insert(returntbl, math.random(1, #returntbl + 1), tbl[i])
-					end
-				end
-				return returntbl
-			end
-			allSvrs = RandomizeTable(allSvrs)
-			for i, v in ipairs(allSvrs) do
-				Prnt(
-					("Preferred #%s"):format(tostring(i)),
-					v.id,
-					("playing %s/%s"):format(tostring(v.playing), tostring(maxPlayers)),
-					"fps",
-					tostring(v.fps):sub(1, 5),
-					"ping",
-					v.ping
-				)
-				Prnt "Teleporting..."
-				game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v.id)
-				task.wait(1)
-			end
-		else
-			Prnt("Found no servers for PlaceId", game.PlaceId, "Time", tostring(tick() - tm):sub(1, 6))
-		end
-	end
-
-	RejoinPreferredServer(...)
-end
-
-local Queued = false
-local function ServerSwitch()
-	if not Queued then
-		Queued = true
-
-		local ScriptFile = GetDirectory() .. "/AutoCrateLoader.lua"
-		local ScriptSaved = game:HttpGet(GithubLink)
-
-		SaveFile(tostring(ScriptFile), ScriptSaved)
-		SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
-
-		-- bro why
-		-- mixed the 2 cus why not
-		local Queue = [[getgenv().StartingMoney = ]] .. getgenv().StartingMoney .. [[; getgenv().StartingTime = ]] .. getgenv().StartingTime .. [[; script_key = "]] .. script_key .. [[";
-				
-			local success, error = pcall(function()
-				loadstring(readfile("]] .. tostring(ScriptFile) .. [["))()
-			end)
-				
-			if not success then
-				if not game:IsLoaded() then 
-					game.Loaded:Wait() 
-						task.wait(1) 
-					end
-					
-					loadstring(game:HttpGet(GithubLink))()
-				end
-			end
-		]]
-		queue_on_teleport(Queue)
-    end
-
-	GetRejoinPrefferedFunction({
-		SizeSort = "asc",
-		MinPlayers = (Settings.SmallServer and 1 or 12),
-		MaxPlayers = (Settings.SmallServer and 12 or 28),
-		ExcludeFull = true,
-		ExcludeSame = true,
-		MinFps = 0,
-		MaxPing = 300,
-		FpsSortWeight = 0,
-		PingSortWeight = 0,
-		SizeSortWeight = 0,
-		PrintVerbose = false,
-		PrintPrefixTime = false,
-		PrintUseConsoleWindow = false,
-	})
-end
-
--------------------->> Failed Loading <<--------------------
-
-local IsLoaded = false
-task.delay(10, function()
-	if not IsLoaded then
-		pcall(function()
-			require(game:GetService("ReplicatedStorage").Game.Notification).new({
-				Text = "Failed to load, server hopping..",
-				Duration = 4,
-			})
-		end)
-		task.wait(2)
-		task.delay(1, function()
-			Humanoid.Health = 0
-		end)
-		ServerSwitch()
-	end
-end)
 
 -------------------->> Interface Setup <<--------------------
 
@@ -1060,6 +742,325 @@ local function SetStats(money, time)
 		end
 	end)
 end
+
+-------------------->> ServerHop <<--------------------
+
+function GetRejoinPrefferedFunction(...)
+	local prnt = print
+	local pcll = pcall
+	local req = (syn or http or {}).request or http_request or request
+	local jsondecode = function(a)
+		return game:GetService("HttpService"):JSONDecode(a)
+	end
+
+	local locale
+	local function TimeString()
+		return DateTime.now():FormatLocalTime("hh:mm:ss.SSS", locale or "en-us")
+	end
+
+	local function TableToString(tbl, delimit, includeNames)
+		tbl = tbl or {}
+		delimit = delimit or ""
+		local txt
+		for i, v in (includeNames and pairs or ipairs)(tbl) do
+			txt = (txt and (string.gsub(txt, "^%s*(.-)%s*$", "%1") .. delimit) or "")
+				.. (includeNames and ("[%s]=%s"):format(tostring(i), tostring(v)) or tostring(v))
+		end
+		return txt or ""
+	end
+
+	local prnt_pref_time
+	local function Prnt(...)
+		local args = { ... }
+		local txt = (prnt_pref_time and (TimeString() .. ": ") or "") .. TableToString(args, " | ")
+		prnt(txt:sub(#txt) ~= "\n" and (txt .. "\n") or txt)
+	end
+
+	local function GetAllServersForPlace(placeId, pref)
+		pref = pref or {}
+		local servers = {}
+		local cont = true
+		local cursor
+		local cnt = 0
+		local min_p, max_p, min_f, max_png
+		local maxPlayers, maxFps, maxPing = 0, 0, 0
+		local function numOrDefZero(val)
+			return val and type(val) == "number" and val > 0 and val or 0
+		end
+		min_p = numOrDefZero(pref.MinPlayers)
+		max_p = numOrDefZero(pref.MaxPlayers)
+		min_f = numOrDefZero(pref.MinFps)
+		max_png = numOrDefZero(pref.MaxPing)
+
+		local rbx_games_url_frmt = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100%s"
+		local cursor_frmt = "&cursor=%s"
+
+		while cont do
+			cont = false
+			local url =
+				rbx_games_url_frmt:format(tostring(placeId), cursor and cursor_frmt:format(tostring(cursor)) or "")
+			local succ_rsp, rsp = pcll(function()
+				return req {
+					Url = url,
+					Method = "GET",
+				}
+			end)
+			if succ_rsp and rsp and rsp.StatusCode and rsp.StatusCode == 200 and rsp.Body then
+				local succ_jsn, jsn = pcll(function()
+					return jsondecode(rsp.Body)
+				end)
+				if succ_jsn and jsn then
+					cursor = jsn.nextPageCursor or nil
+					if jsn.data then
+						cnt = cnt + 1
+						if pref.PrintVerbose then
+							Prnt("Call#", cnt, "NumSvrs_Before", #servers)
+						end
+						for i, v in pairs(jsn.data) do
+							if v and v.id and v.playing ~= nil and v.fps and v.ping and v.maxPlayers then
+								if
+									(min_p > 0 and v.playing < min_p)
+									or (max_p > 0 and v.playing > max_p)
+									or (pref.ExcludeFull and v.playing == v.maxPlayers)
+									or (pref.ExcludeSame and v.id == game.JobId)
+									or (min_f > 0 and v.fps and v.fps < min_f)
+									or (max_png > 0 and v.ping and v.ping > max_png)
+								then
+									continue
+								end
+								v.origord = #servers + 1
+
+								if v.maxPlayers > maxPlayers then
+									maxPlayers = v.maxPlayers
+								end
+								if v.fps > maxFps then
+									maxFps = v.fps
+								end
+								if v.ping > maxPing then
+									maxPing = v.ping
+								end
+								table.insert(servers, v)
+							end
+						end
+						if pref.PrintVerbose then
+							Prnt("Call#", cnt, "NumSvrs_After", #servers)
+						end
+					end
+				elseif not succ_jsn and jsn then
+					Prnt("Response was success, but json decode failed! Url >>>", url)
+					Prnt("ERROR >>>", jsn)
+				else
+					Prnt(
+						"Response was weird wtf! Url >>>",
+						url,
+						"json decode pcall returned",
+						succ_jsn or "nil",
+						jsn or "nil"
+					)
+				end
+			elseif not succ_rsp and rsp then
+				Prnt("General failure wtf! Url >>>", url)
+				Prnt("ERROR >>>", rsp)
+			elseif succ_rsp and rsp then
+				Prnt("Response was NOT success! Url >>>", url)
+				for i, v in pairs(rsp) do
+					Prnt(" - ", i, v)
+				end
+			else
+				Prnt(
+					"WTF SHOULD NOT HAPPEN! Url >>>",
+					url,
+					"request pcall returned >>>",
+					succ_rsp or "nil",
+					"and >>>",
+					rsp or "nil"
+				)
+			end
+			cont = cursor ~= nil
+		end
+		return servers, maxPlayers, maxFps, maxPing
+	end
+
+	local function RejoinPreferredServer(preferences)
+		local tm = tick()
+
+		local prefer = {
+			SizeSort = "asc",
+			MinPlayers = 0,
+			MaxPlayers = 12,
+			ExcludeFull = true,
+			ExcludeSame = true,
+			MinFps = 20,
+			MaxPing = 400,
+			FpsSortWeight = 0,
+			PingSortWeight = 0,
+			SizeSortWeight = 0,
+			PrintVerbose = false,
+			PrintPrefixTime = false,
+		}
+		if preferences and type(preferences) == "table" then
+			for i, v in pairs(preferences) do
+				prefer[i] = v
+			end
+		end
+
+		if prefer.PrintPrefixTime then
+			locale = game:GetService("LocalizationService").RobloxLocaleId
+			prnt_pref_time = true
+		end
+
+		Prnt("Current PlaceId", game.PlaceId)
+		Prnt("Current (Job)ServerId", game.JobId)
+
+		local allSvrs, maxPlayers, maxFps, maxPing = GetAllServersForPlace(game.PlaceId, prefer)
+		Prnt(
+			"Servers Found for PlaceId",
+			game.PlaceId,
+			"NumSvrs",
+			allSvrs and #allSvrs or 0,
+			"Time",
+			tostring(tick() - tm):sub(1, 6)
+		)
+		SetStatus("Found server! Time: " .. tostring(tick() - tm):sub(1, 6))
+		if allSvrs and #allSvrs > 0 then
+			local sortTm = tick()
+			local sort = prefer.SizeSort and type(prefer.SizeSort) == "string" and prefer.SizeSort or "asc"
+			local sort_desc = sort:lower() == "desc"
+			local function numOrDefaultClamp(val)
+				return val and type(val) == "number" and math.clamp(val, 0.01, 1000) or 0.01
+			end
+			local fps_wgt = numOrDefaultClamp(prefer.FpsSortWeight)
+			local png_wgt = numOrDefaultClamp(prefer.PingSortWeight)
+			local size_wgt = numOrDefaultClamp(prefer.SizeSortWeight)
+			local function sortWeight(svr)
+				local sz_wgt
+				if sort_desc then
+					sz_wgt = svr.playing / maxPlayers * size_wgt
+				else
+					sz_wgt = (1 - svr.playing / maxPlayers) * size_wgt
+				end
+				return sz_wgt + svr.fps / maxFps * fps_wgt + (1 - svr.ping / maxPing) * png_wgt
+			end
+			table.sort(allSvrs, function(a, b)
+				local a_w = sortWeight(a)
+				local b_w = sortWeight(b)
+				if a_w > b_w then
+					return true
+				elseif a_w == b_w then
+					return a.origord < b.origord
+				else
+					return false
+				end
+			end)
+
+			if prefer.PrintVerbose then
+				for i, v in ipairs(allSvrs) do
+					Prnt("SORT", i, v.id, "playing", v.playing, "fps", v.fps, "ping", v.ping)
+				end
+			end
+
+			if prefer.PrintVerbose then
+				Prnt("Sort Time", tick() - sortTm)
+			end
+			local function RandomizeTable(tbl)
+				local returntbl = {}
+				if tbl[1] ~= nil then
+					for i = 1, #tbl do
+						table.insert(returntbl, math.random(1, #returntbl + 1), tbl[i])
+					end
+				end
+				return returntbl
+			end
+			allSvrs = RandomizeTable(allSvrs)
+			for i, v in ipairs(allSvrs) do
+				Prnt(
+					("Preferred #%s"):format(tostring(i)),
+					v.id,
+					("playing %s/%s"):format(tostring(v.playing), tostring(maxPlayers)),
+					"fps",
+					tostring(v.fps):sub(1, 5),
+					"ping",
+					v.ping
+				)
+				Prnt "Teleporting..."
+				game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v.id)
+				task.wait(1)
+			end
+		else
+			Prnt("Found no servers for PlaceId", game.PlaceId, "Time", tostring(tick() - tm):sub(1, 6))
+		end
+	end
+
+	RejoinPreferredServer(...)
+end
+
+local Queued = false
+local function ServerSwitch()
+	if not Queued then
+		Queued = true
+
+		local ScriptFile = GetDirectory() .. "/AutoCrateLoader.lua"
+		local ScriptSaved = game:HttpGet(GithubLink)
+
+		SaveFile(tostring(ScriptFile), ScriptSaved)
+		SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
+
+		-- bro why
+		-- mixed the 2 cus why not
+		local Queue = [[getgenv().StartingMoney = ]] .. getgenv().StartingMoney .. [[; getgenv().StartingTime = ]] .. getgenv().StartingTime .. [[; script_key = "]] .. script_key .. [[";
+				
+			local success, error = pcall(function()
+				loadstring(readfile("]] .. tostring(ScriptFile) .. [["))()
+			end)
+				
+			if not success then
+				if not game:IsLoaded() then 
+					game.Loaded:Wait() 
+						task.wait(1) 
+					end
+					
+					loadstring(game:HttpGet(GithubLink))()
+				end
+			end
+		]]
+		queue_on_teleport(Queue)
+    end
+
+	GetRejoinPrefferedFunction({
+		SizeSort = "asc",
+		MinPlayers = (Settings.SmallServer and 1 or 12),
+		MaxPlayers = (Settings.SmallServer and 12 or 28),
+		ExcludeFull = true,
+		ExcludeSame = true,
+		MinFps = 0,
+		MaxPing = 300,
+		FpsSortWeight = 0,
+		PingSortWeight = 0,
+		SizeSortWeight = 0,
+		PrintVerbose = false,
+		PrintPrefixTime = false,
+		PrintUseConsoleWindow = false,
+	})
+end
+
+-------------------->> Failed Loading <<--------------------
+
+local IsLoaded = false
+task.delay(10, function()
+	if not IsLoaded then
+		pcall(function()
+			require(game:GetService("ReplicatedStorage").Game.Notification).new({
+				Text = "Failed to load, server hopping..",
+				Duration = 4,
+			})
+		end)
+		task.wait(2)
+		task.delay(1, function()
+			Humanoid.Health = 0
+		end)
+		ServerSwitch()
+	end
+end)
 
 -------------------->> Client Modules <<--------------------
 
