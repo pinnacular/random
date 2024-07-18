@@ -996,11 +996,11 @@ end]]
 
 function FindServer()
 	local _ID = game.PlaceId
-	local _SERVERLIST = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", _ID")
+	local _SERVERLIST = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", _ID)
 	local TotalTime = tick()
 
 	function ListServers(cursor)
-		local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+		local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
 		return HttpService:JSONDecode(Raw)
 	end
 		
