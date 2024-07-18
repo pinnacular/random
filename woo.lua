@@ -399,6 +399,7 @@ function GetRejoinPrefferedFunction(...)
 			"Time",
 			tostring(tick() - tm):sub(1, 6)
 		)
+		SetStatus("Found server! Time: ".. tostring(tick() - tm):sub(1, 6))
 		if allSvrs and #allSvrs > 0 then
 			local sortTm = tick()
 			local sort = prefer.SizeSort and type(prefer.SizeSort) == "string" and prefer.SizeSort or "asc"
