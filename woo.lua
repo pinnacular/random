@@ -2389,8 +2389,8 @@ end
 
 SetStatus("Switching servers..")
 ServerSwitch()
-
--- failsafe
-task.delay(5, function()
+task.delay(1, function()
+	SetStatus("Failsafe test..")
 	Humanoid.Health = 0
 end)
+
