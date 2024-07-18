@@ -1003,7 +1003,7 @@ function FindServer()
 		local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
 		return HttpService:JSONDecode(Raw)
 	end
-		
+	
 	local Server, Next
 	repeat
    		local Servers = ListServers(Next)
@@ -1014,11 +1014,13 @@ function FindServer()
         		end
   		end
 		Next = Servers.nextPageCursor
-
 	until Server
 
 	SetStatus("Found Server! Time: " ..  tostring(tick() - TotalTime):sub(1, 6) .. "s")
 	TeleportService:TeleportToPlaceInstance(_ID, Server.id, Player)
+
+	task.wait(2)
+	FindServer() -- in case restricted/doesnt work
 end
 
 local Queued = false
