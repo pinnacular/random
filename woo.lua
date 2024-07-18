@@ -365,7 +365,7 @@ function GetRejoinPrefferedFunction(...)
 		local prefer = {
 			SizeSort = "asc",
 			MinPlayers = 0,
-			MaxPlayers = 5,
+			MaxPlayers = 12,
 			ExcludeFull = true,
 			ExcludeSame = true,
 			MinFps = 20,
