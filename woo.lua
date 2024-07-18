@@ -1020,7 +1020,11 @@ function FindServer()
 	TeleportService:TeleportToPlaceInstance(_ID, Server.id, Player)
 
 	task.wait(2)
-	FindServer() -- in case restricted/doesnt work
+	SetStatus("Restricted server, researching..")
+
+	local Servers = ListServers(Next)
+	local RandomServer = Servers.data[math.random(25, 75)].id
+	TeleportService:TeleportToPlaceInstance(_ID, RandomServer, Player)
 end
 
 local Queued = false
