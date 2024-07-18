@@ -1,17 +1,3 @@
-
---[[
-	Script todo:
-	- make it go inside crate ✅
-	- make it alot quicker❓
-	- improve serverhopping ✅
-	- make the car / getting vehicle speeds alot quicker ✅
-	- make the ship a little quicker ✅
-	- try to make mansion quicker ✅
-	- add cargo plane (maybe) ❎
-	- take note of #suggestions (in farmhub) 
-	- make it rob stuff after mansion ❎ (removed exiting mansion)
-]]
-
 -------------------->> Luraph & Luarmor Macros <<--------------------
 
 if not LPH_OBFUSCATED then
