@@ -2162,6 +2162,7 @@ while Humanoid == nil do
 end
 
 IsLoaded = true
+GetPistol()
 
 task.spawn(function()
 	while task.wait(0.01) do
