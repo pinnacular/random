@@ -2348,6 +2348,8 @@ if RobberyData.Mansion.Open then
 end
 
 SetStatus("No more robberies, finding server..")
+getgenv().StartingMoney = getgenv().StartingMoney
+getgenv().StartingTime  = getgenv().StartingTime
 ServerSwitch()
 
 -- failsafe
