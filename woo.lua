@@ -1,3 +1,17 @@
+
+--[[
+	Script todo:
+	- make it go inside crate ✅
+	- make it alot quicker❓
+	- improve serverhopping ✅
+	- make the car / getting vehicle speeds alot quicker ✅
+	- make the ship a little quicker ✅
+	- try to make mansion quicker ✅
+	- add cargo plane (maybe) ❎
+	- take note of #suggestions (in farmhub) 
+	- make it rob stuff after mansion ❎ (removed exiting mansion)
+]]
+
 -------------------->> Luraph & Luarmor Macros <<--------------------
 
 if not LPH_OBFUSCATED then
@@ -504,44 +518,22 @@ local function ServerSwitch()
 
 		-- bro why
 		-- mixed the 2 cus why not
-		if LPH_OBFUSCATED then 
-			Queue = [[getgenv().StartingMoney = ]] .. getgenv().StartingMoney .. [[; getgenv().StartingTime = ]] .. getgenv().StartingTime .. [[; script_key = "]] .. script_key .. [[";
+		local Queue = [[getgenv().StartingMoney = ]] .. getgenv().StartingMoney .. [[; getgenv().StartingTime = ]] .. getgenv().StartingTime .. [[; script_key = "]] .. script_key .. [[";
 				
-				local success, error = pcall(function()
-					loadstring(readfile("]] .. tostring(ScriptFile) .. [["))()
-				end)
+			local success, error = pcall(function()
+				loadstring(readfile("]] .. tostring(ScriptFile) .. [["))()
+			end)
 				
-				if not success then
-					if not game:IsLoaded() then 
-						game.Loaded:Wait() 
+			if not success then
+				if not game:IsLoaded() then 
+					game.Loaded:Wait() 
 						task.wait(1) 
 					end
 					
 					loadstring(game:HttpGet(GithubLink))()
 				end
-			]]
-		else
-			-- for debugging
-			Queue = [[getgenv().StartingMoney = ]] .. getgenv().StartingMoney .. [[; getgenv().StartingTime = ]] .. getgenv().StartingTime .. [[;script_key = "]] .. script_key .. [[";]]
-		end
-
-		--[[ original here in case
-			-- local Queue =
-
-				local success, error = pcall(function()
-					loadstring(readfile("thing
-				end)
-   
-				if not success then
-				   if not game:IsLoaded() then 
-						game.Loaded:Wait() 
-						task.wait(1) 
-					end
-   
-				   loadstring(game:HttpGet(GithubLink))()
-				end
+			end
 		]]
-
 		queue_on_teleport(Queue)
     end
 
@@ -1809,12 +1801,22 @@ local SetIdentity = setidentity or set_thread_identity or setcontext or setthrea
 local function GetPistol()
 	-- call this when player is crim, otherwise newgen cops are gonna kill us lol
 	-- retrieve guns when player is crim and map finished loading
-    for i,v in pairs(workspace:GetDescendants()) do
+    --[[for i,v in pairs(workspace:GetDescendants()) do
         if v:IsA("ClickDetector") then
 			if Backpack:FindFirstChild(SelectedGun) then return end
             fireclickdetector(v)
         end
-    end
+    end]]
+
+	if Backpack:FindFirstChild(SelectedGun) then return end
+
+	SetIdentity(2)
+	Modules.GunShopUI.open()
+	task.wait()
+
+	firesignal(PlayerGui.GunShopGui.Container.Container.Main.Container.Slider[SelectedGun].Bottom.Action.MouseButton1Down)
+	SetIdentity(8)
+	Modules.GunShopUI.close()
 end
 
 local function ShootGun()
@@ -2389,8 +2391,8 @@ end
 
 SetStatus("Switching servers..")
 ServerSwitch()
-task.delay(1, function()
-	SetStatus("Failsafe test..")
+
+-- failsafe
+task.delay(5, function()
 	Humanoid.Health = 0
 end)
-
