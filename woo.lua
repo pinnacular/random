@@ -1085,7 +1085,11 @@ local function ServerSwitch()
 			end
 		]]
 		
-		queue_on_teleport(Queue)
+		Player.OnTeleport:Connect(function(State)
+			if State == Enum.TeleportState.Started then	
+				queue_on_teleport(Queue)
+			end
+		end)
 		FindServer()
     end
 	--[[GetRejoinPrefferedFunction({
