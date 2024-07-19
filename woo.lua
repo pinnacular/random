@@ -1056,36 +1056,38 @@ local function ServerSwitch()
 	if not Queued then
 		Queued = true
 
-		local ScriptFile = GetDirectory() .. "/AutoCrateLoader.lua"
+		local ScriptFile = tostring(GetDirectory() .. "/AutoCrateLoader.lua")
 		local ScriptSaved = game:HttpGet(GithubLink)
 
-		SaveFile(tostring(ScriptFile), ScriptSaved)
+		SaveFile(ScriptFile, ScriptSaved)
 		SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
 
 		-- bro why
-		-- mixed the 2 cus why not
-		local Queue = [[getgenv().StartingMoney = ]] .. getgenv().StartingMoney .. [[; getgenv().StartingTime = ]] .. getgenv().StartingTime .. [[; script_key = "]] .. script_key .. [[";
+		-- uhh getgenv wont transfer lol
+
+		local StartMoney = getgenv().StartingMoney
+		local StartTime = getgenv().StartingTime
+		
+		local Queue = [[getgenv().StartingMoney = ]] .. StartMoney .. [[; getgenv().StartingTime = ]] .. StartTime .. [[;
 				
 			local success, error = pcall(function()
-				loadstring(readfile("]] .. tostring(ScriptFile) .. [["))()
+				loadstring(game:HttpGet(GithubLink))()
 			end)
-				
+			
 			if not success then
 				if not game:IsLoaded() then 
 					game.Loaded:Wait() 
 						task.wait(1) 
 					end
 					
-					loadstring(game:HttpGet(GithubLink))()
+					loadstring(readfile("]] .. ScriptFile .. [["))()
 				end
 			end
 		]]
-		getgenv().StartingMoney = getgenv().StartingMoney
-		getgenv().StartingTime  = getgenv().StartingTime
 		
 		queue_on_teleport(Queue)
+		FindServer()
     end
-
 	--[[GetRejoinPrefferedFunction({
 		SizeSort = "asc",
 		MinPlayers = (Settings.SmallServer and 1 or 12),
@@ -1101,8 +1103,8 @@ local function ServerSwitch()
 		PrintPrefixTime = false,
 		PrintUseConsoleWindow = false,
 	})]]
-	FindServer()
 end
+
 getgenv().ServerSwitch = ServerSwitch -- in case failed tp, call this manually
 
 -------------------->> Failed Loading <<--------------------
