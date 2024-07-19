@@ -2234,10 +2234,12 @@ task.spawn(function()
 		end)
 		if IsArrested() then
 			SetStatus("You're arrested, switching servers..")
+			WaitForReward()
+
+			ServerSwitch()
 			task.delay(2, function()
 				Humanoid.Health = 0
 			end)
-			ServerSwitch()
 		end
 
 		if GetClosestAirdrop() then
