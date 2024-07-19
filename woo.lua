@@ -1010,6 +1010,13 @@ function FindServer()
 		local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
 		return HttpService:JSONDecode(Raw)
 	end
+
+	function ShuffleServers(servers) -- ft. chatgpt
+		for i = #servers, 2, -1 do
+			local j = math.random(i)
+			servers[i], servers[j] = servers[j], servers[i]
+		end
+	end
 	
 	local Next
 	function NewServer()
@@ -1018,11 +1025,14 @@ function FindServer()
 
 		Next = Servers.nextPageCursor
 		
-		for i, serv in ipairs(Servers.data) do
-			if serv.playing < serv.maxPlayers then
-				if serv.playing <= serv.maxPlayers - 6 then
-					FoundServer = serv.id
-					break
+		if Servers.data then
+			ShuffleServers(Servers.data)
+			for _, serv in ipairs(Servers.data) do
+				if serv.playing < serv.maxPlayers then
+					if serv.playing <= serv.maxPlayers - 6 then
+						FoundServer = serv.id
+						break
+					end
 				end
 			end
 		end
