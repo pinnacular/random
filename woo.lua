@@ -58,7 +58,7 @@ end
 -------------------->> Directory Functions <<--------------------
 
 local function GetDirectory()
-	local Directory = "NIGGAHACK"
+	local Directory = "VOIDCLIENT"
 	if not isfolder(Directory) then
 		makefolder(Directory)
 	end
