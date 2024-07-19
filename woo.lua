@@ -1005,26 +1005,35 @@ function FindServer()
 	end
 	
 	local Server, Next
-	repeat
-   		local Servers = ListServers(Next)
+	function NewServer()
+		local Servers = ListServers(Next)
+		local FoundServer
+		
 		for i, serv in ipairs(Servers.data) do
         		if serv.playing < serv.maxPlayers then
-            			Server = serv
+            			FoundServer = serv
             			break
         		end
   		end
+
 		Next = Servers.nextPageCursor
-	until Server
+		return FoundServer
+	end
 
 	SetStatus("Found Server! Time: " ..  tostring(tick() - TotalTime):sub(1, 6) .. "s")
-	TeleportService:TeleportToPlaceInstance(_ID, Server.id, Player)
-
-	task.wait(2)
-	SetStatus("Restricted server, researching..")
-
-	local Servers = ListServers(Next)
-	local RandomServer = Servers.data[math.random(25, 75)].id
-	TeleportService:TeleportToPlaceInstance(_ID, RandomServer, Player)
+	local success, response 
+	
+	repeat
+		success, response = pcall(function()
+			TeleportService:TeleportToPlaceInstance(_ID, NewServer(), Player)
+		end)
+		
+		if not success then
+			task.wait(1)
+			SetStatus("Failed! Retrying..")
+			return
+		end
+	until sucess
 end
 
 local Queued = false
