@@ -1062,13 +1062,16 @@ local function ServerSwitch()
 		SaveFile(ScriptFile, ScriptSaved)
 		SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
 
+		-- writefile the earnings instead, delfile if the day changes (24hr passed)
+		--SaveFile("AutoCrateEarnings.json", 
+		
 		-- bro why
-		-- uhh getgenv wont transfer lol
-
-		local StartMoney = getgenv().StartingMoney
+		-- queue on teleport is completely bricked
+		
+		--[[local StartMoney = getgenv().StartingMoney
 		local StartTime = getgenv().StartingTime
 		
-		local Queue = tostring([[getgenv().StartingMoney = ]] .. StartMoney .. [[; getgenv().StartingTime = ]] .. StartTime .. [[;
+		--local Queue = tostring([[getgenv().StartingMoney = .. StartMoney .. [[; getgenv().StartingTime = .. StartTime .. [[;
 				
 			local success, error = pcall(function()
 				loadstring(game:HttpGet(GithubLink))()
@@ -1080,16 +1083,16 @@ local function ServerSwitch()
 						task.wait(1) 
 					end
 					
-					loadstring(readfile("]] .. ScriptFile .. [["))()
+					loadstring(readfile(" .. ScriptFile .. [["))()
 				end
 			end
-		]])
+		
 		
 		Player.OnTeleport:Connect(function(State)
 			if State == Enum.TeleportState.Started then	
 				queue_on_teleport(Queue)
 			end
-		end)
+		end)]]
 		FindServer()
     end
 	--[[GetRejoinPrefferedFunction({
