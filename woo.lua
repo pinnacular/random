@@ -188,8 +188,15 @@ end)()
 
 -------------------->> Client Statisitcs <<--------------------
 
-getgenv().StartingMoney = getgenv().StartingMoney or Leaderstats:WaitForChild("Money").Value
-getgenv().StartingTime  = getgenv().StartingTime or tick()
+if not getgenv().StartingMoney and getgenv().StartingTime then
+	getgenv().StartingMoney = Leaderstats:WaitForChild("Money").Value
+	getgenv().StartingTime = tick()
+end
+
+getgenv().StartingMoney = getgenv().StartingMoney
+getgenv().StartingTime  = getgenv().StartingTime
+
+print(getgenv().StartingMoney, getgenv().StartingTime) -- idk
 
 -------------------->> Formatting Stuff <<--------------------
 
