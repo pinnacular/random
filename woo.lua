@@ -196,9 +196,6 @@ if not getgenv().StartingTime then
 	getgenv().StartingTime = tick()
 end
 
-getgenv().StartingMoney = getgenv().StartingMoney
-getgenv().StartingTime  = getgenv().StartingTime
-
 print(getgenv().StartingMoney, getgenv().StartingTime) -- idk
 
 -------------------->> Formatting Stuff <<--------------------
