@@ -1004,36 +1004,41 @@ function FindServer()
 		return HttpService:JSONDecode(Raw)
 	end
 	
-	local Server, Next
+	local Next
 	function NewServer()
 		local Servers = ListServers(Next)
 		local FoundServer
 		
 		for i, serv in ipairs(Servers.data) do
-        		if serv.playing < serv.maxPlayers then
-            			FoundServer = serv
-            			break
-        		end
-  		end
+			if serv.playing < serv.maxPlayers then
+				FoundServer = serv.id
+				break
+			end
+		end
 
 		Next = Servers.nextPageCursor
 		return FoundServer
 	end
 
-	SetStatus("Found Server! Time: " ..  tostring(tick() - TotalTime):sub(1, 6) .. "s")
-	local success, response 
-	
+	local success, response
 	repeat
-		success, response = pcall(function()
-			TeleportService:TeleportToPlaceInstance(_ID, NewServer(), Player)
-		end)
-		
-		if not success then
+		local Server = NewServer()
+		if not Server then
+			SetStatus("No available servers, retrying...")
 			task.wait(1)
-			SetStatus("Failed! Retrying..")
-			return
+		else
+			success, response = pcall(function()
+				TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
+			end)
+			
+			if not success then
+				SetStatus("Failed to teleport! Retrying...")
+				task.wait(1)
+			end
 		end
-	until sucess
+	until success
+
+	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
 end
 
 local Queued = false
