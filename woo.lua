@@ -1015,15 +1015,18 @@ function FindServer()
 	function NewServer()
 		local Servers = ListServers(Next)
 		local FoundServer
+
+		Next = Servers.nextPageCursor
 		
 		for i, serv in ipairs(Servers.data) do
 			if serv.playing < serv.maxPlayers then
-				FoundServer = serv.id
-				break
+				if serv.playing <= serv.maxPlayers - 6 then
+					FoundServer = serv.id
+					break
+				end
 			end
 		end
 
-		Next = Servers.nextPageCursor
 		return FoundServer
 	end
 
