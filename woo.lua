@@ -188,8 +188,11 @@ end)()
 
 -------------------->> Client Statisitcs <<--------------------
 
-if not getgenv().StartingMoney and getgenv().StartingTime then
+if not getgenv().StartingMoney then
 	getgenv().StartingMoney = Leaderstats:WaitForChild("Money").Value
+end
+
+if not getgenv().StartingTime then
 	getgenv().StartingTime = tick()
 end
 
