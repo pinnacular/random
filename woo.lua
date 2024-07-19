@@ -1093,6 +1093,7 @@ local function ServerSwitch()
 	})]]
 	FindServer()
 end
+getgenv().ServerSwitch = ServerSwitch -- in case failed tp, call this manually
 
 -------------------->> Failed Loading <<--------------------
 
