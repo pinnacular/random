@@ -1530,18 +1530,18 @@ local function GetVehicle()
 		until tick() - timeout_drop > 0.75
 		
 		Services.ReplicatedStorage.GarageSpawnVehicle:FireServer("Chassis", (math.random(1, 2) == 1 and "Camaro" or "Jeep"))
-
-		if GetVehicleModel() then
-			pcall(function()
-				GetVehicleModel().plate.SurfaceGui.Frame.TextLabel.Text = "VOIDCLIENT"
-			end)
-			return true
-		end
 		
 		BreakTime = tick()
 		repeat
 			task.wait(0.25)
 		until tick() - BreakTime > 5 or GetVehicleModel()
+
+		if GetVehiclePacket() then
+			pcall(function()
+				GetVehicleModel().plate.SurfaceGui.Frame.TextLabel.Text = "VOIDCLIENT"
+			end)
+			return true
+		end
 	end
 
 	for i, v in pairs(Vehicles) do
