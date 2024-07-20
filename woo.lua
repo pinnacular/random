@@ -1533,8 +1533,8 @@ local function GetVehicle()
 		
 		BreakTime = tick()
 		repeat
-			task.wait(0.25)
-		until tick() - BreakTime > 5 or GetVehiclePacket()
+			task.wait()
+		until GetVehiclePacket() or tick() - BreakTime > 5 
 
 		if GetVehiclePacket() then
 			pcall(function()
