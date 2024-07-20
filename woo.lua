@@ -1890,7 +1890,7 @@ if not FinishedLoading then
 
 			print(v, v.Parent)
            		fireclickdetector(v)
-			--task.wait(0.7)
+			task.wait(0.7)
    		end
 	end
 end
@@ -2432,6 +2432,8 @@ end
 if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
+
+if not FinishedLoading then continue end
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
