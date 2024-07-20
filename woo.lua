@@ -1882,17 +1882,20 @@ end
 
 -- maybe i dont call getpistol at all?
 -- im onto something
-
+local RetrievedGuns = false
 if not FinishedRendering then
 	for i,v in pairs(workspace:GetDescendants()) do
         	if v:IsA("ClickDetector") then
 			local ParentName = tostring(v.Parent)
 			if ParentName == "Criminal" or ParentName == "Station" then
-				if Backpack:FindFirstChild(SelectedGun) then break end
+				if Backpack:FindFirstChild(SelectedGun) then
+					RetrievedGuns = true
+					break 
+				end
 
 				print(v, v.Parent)
            			fireclickdetector(v)
-				--task.wait(0.7)
+				task.wait(0.7)
    			end
 		end
 	end
@@ -2370,8 +2373,9 @@ task.spawn(function()
 	end
 end)
 
-if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then 
-    LoadMap()
+if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
+	repeat task.wait() until RetrievedGuns
+	LoadMap()
 end
 
 Humanoid.Died:Connect(function()
