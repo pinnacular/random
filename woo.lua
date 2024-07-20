@@ -1889,6 +1889,7 @@ if not FinishedLoading then
 			if Backpack:FindFirstChild(SelectedGun) then break end
 			print(v, v.Parent)
            		fireclickdetector(v)
+			task.wait(0.7) -- debug
    		end
 	end
 end
