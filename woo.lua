@@ -2436,7 +2436,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-if not FinishedLoading then continue end
+repeat task.wait() until FinishedLoading
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
