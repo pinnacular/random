@@ -1496,12 +1496,6 @@ local function GetVehicle()
 	if not Character or not Root or not Humanoid or Humanoid.Health == 0 then
 		return error()
 	end
-	if GetVehiclePacket() then
-		pcall(function()
-			GetVehicleModel().plate.SurfaceGui.Frame.TextLabel.Text = "VOIDCLIENT"
-		end)
-		return true
-	end
 	local Vehicles = Workspace.Vehicles:GetChildren()
 	local OwnedCars = {"Camaro", "Jeep"}
 
@@ -1586,6 +1580,13 @@ local function GetVehicle()
 		end
 	end
 
+	if GetVehiclePacket() then
+		pcall(function()
+			GetVehicleModel().plate.SurfaceGui.Frame.TextLabel.Text = "VOIDCLIENT"
+		end)
+		return true
+	end
+	
 	return GetVehicle()
 end
 
@@ -1893,7 +1894,6 @@ if not FinishedRendering then
 					break 
 				end
 
-				print(v, v.Parent)
            			fireclickdetector(v)
 				task.wait(0.7)
    			end
@@ -2374,6 +2374,7 @@ task.spawn(function()
 end)
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
+	SetStatus("Waiting for guns..")
 	repeat task.wait() until RetrievedGuns
 	LoadMap()
 end
