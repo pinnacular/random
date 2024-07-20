@@ -1531,17 +1531,17 @@ local function GetVehicle()
 		
 		Services.ReplicatedStorage.GarageSpawnVehicle:FireServer("Chassis", (math.random(1, 2) == 1 and "Camaro" or "Jeep"))
 
-		BreakTime = tick()
-		repeat
-			task.wait(0.25)
-		until tick() - BreakTime > 5 or GetVehicleModel()
-
 		if GetVehicleModel() then
 			pcall(function()
 				GetVehicleModel().plate.SurfaceGui.Frame.TextLabel.Text = "VOIDCLIENT"
 			end)
 			return true
 		end
+		
+		BreakTime = tick()
+		repeat
+			task.wait(0.25)
+		until tick() - BreakTime > 5 or GetVehicleModel()
 	end
 
 	for i, v in pairs(Vehicles) do
