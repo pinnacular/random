@@ -1883,7 +1883,7 @@ end
 -- maybe i dont call getpistol at all?
 -- im onto something
 
-if not FinishedLoading then
+if not FinishedRendering then
 	for i,v in pairs(workspace:GetDescendants()) do
         	if v:IsA("ClickDetector") then
 			local ParentName = tostring(v.Parent)
@@ -2436,7 +2436,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-repeat task.wait() until FinishedLoading
+repeat task.wait() until FinishedRendering
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
