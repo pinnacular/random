@@ -1884,16 +1884,14 @@ end
 -- im onto something
 
 if not FinishedLoading then
-	task.spawn(function()
-		for i,v in pairs(workspace:GetDescendants()) do
-        		if v:IsA("ClickDetector") then
-				if Backpack:FindFirstChild(SelectedGun) then break end
+	for i,v in pairs(workspace:GetDescendants()) do
+        	if v:IsA("ClickDetector") and v.Parent == "Criminal" then
+			if Backpack:FindFirstChild(SelectedGun) then break end
 
-           			fireclickdetector(v)
-				--task.wait(0.7)
-   			end
-		end
-	end)
+           		fireclickdetector(v)
+			--task.wait(0.7)
+   		end
+	end
 end
 
 -------------------->> idk but robbery callback <<--------------------
@@ -2434,12 +2432,10 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-if FinishedLoading then -- i need this while script finds for guns
-	SetStatus("No more robberies, finding server..")
-	ServerSwitch()
+SetStatus("No more robberies, finding server..")
+ServerSwitch()
 
-	-- failsafe
-	task.delay(2, function()
-		Humanoid.Health = 0
-	end)
-end
+-- failsafe
+task.delay(2, function()
+	Humanoid.Health = 0
+end)
