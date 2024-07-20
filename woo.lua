@@ -1885,7 +1885,7 @@ end
 
 if not FinishedLoading then
 	for i,v in pairs(workspace:GetDescendants()) do
-        	if v:IsA("ClickDetector") and v.Parent == "Criminal" then
+        	if v:IsA("ClickDetector") and (v.Parent == "Criminal" or v.Parent = "Station") then
 			if Backpack:FindFirstChild(SelectedGun) then break end
            		fireclickdetector(v)
    		end
