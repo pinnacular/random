@@ -1047,15 +1047,17 @@ function FindServer()
 		Server = NewServer()
 
 		if not Server then 
+			warn("no server found, retrying..")
+		end
 
-		success, response = pcall(function()
+		--[[success, response = pcall(function()
 			TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
 		end)
 		
 		if not success then
 			warn("Failed to teleport! Error: " .. tostring(response))
 			--task.wait(1)
-		end
+		end]]
 	until success
 
 	warn(Server)
