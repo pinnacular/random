@@ -1007,8 +1007,17 @@ function FindServer()
 	local TotalTime = tick()
 
 	function ListServers(cursor)
-		local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
-		return HttpService:JSONDecode(Raw)
+		local success, response = pcall(function()
+			local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
+			return HttpService:JSONDecode(Raw)
+		end)
+
+		if success then
+			return response
+		else
+			warn("Failed to list servers: " .. tostring(response))
+			return nil
+		end
 	end
 
 	function ShuffleServers(servers) -- ft. chatgpt
@@ -1025,16 +1034,17 @@ function FindServer()
 
 		Next = Servers.nextPageCursor
 		
-		if Servers.data then
+		if Servers and Servers.data then
+			Next = Servers.nextPageCursor
 			ShuffleServers(Servers.data)
 			for _, serv in ipairs(Servers.data) do
-				if serv.playing < serv.maxPlayers then
-					if serv.playing <= serv.maxPlayers - 6 then
-						FoundServer = serv.id
-						break
-					end
+				if serv.playing < serv.maxPlayers - 6 then
+					FoundServer = serv.id
+					break
 				end
 			end
+		else
+			warn("No server data was retrieved, weird")
 		end
 
 		return FoundServer
@@ -1045,15 +1055,15 @@ function FindServer()
 		local Server = NewServer()
 		if not Server then
 			warn("No available servers, retrying...")
-			task.wait(1)
+			--task.wait(1)
 		else
 			success, response = pcall(function()
 				TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
 			end)
 			
 			if not success then
-				warn("Failed to teleport! Retrying...")
-				task.wait(1)
+				warn("Failed to teleport! Error: " .. tostring(response))
+				--task.wait(1)
 			end
 		end
 	until success
