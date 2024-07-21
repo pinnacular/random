@@ -2457,6 +2457,6 @@ SetStatus("No more robberies, finding server..")
 ServerSwitch()
 
 -- failsafe
-task.delay(2, function()
+--[[task.delay(2, function()
 	Humanoid.Health = 0
-end)
+end)]]
