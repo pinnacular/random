@@ -1004,6 +1004,7 @@ end]]
 function FindServer()
 	local _ID = game.PlaceId
 	local SortOrder = Settings.SmallServer and "Asc" or "Dec"
+	
 	local _SERVERLIST = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=100", _ID, SortOrder)
 	local TotalTime = tick()
 
@@ -1027,7 +1028,7 @@ function FindServer()
 		Next = Servers.nextPageCursor
 		
 		if Servers and Servers.data then
-			--ShuffleServers(Servers.data)
+			ShuffleServers(Servers.data)
 			for _, serv in ipairs(Servers.data) do
 				if serv.playing < serv.maxPlayers - 6 then
 					FoundServer = serv.id
@@ -1042,6 +1043,7 @@ function FindServer()
 	end
 
 	local Server
+	local success, response
 	repeat
 		Server = NewServer()
 
@@ -1049,30 +1051,17 @@ function FindServer()
 			warn("no server found, retrying..")
 		end
 
-		--[[success, response = pcall(function()
-			TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
-		end)
-		
-		if not success then
-			warn("Failed to teleport! Error: " .. tostring(response))
-			--task.wait(1)
-		end]]
-	until Server ~= nil
-
-	warn(Server)
-	
-	local success, response
-	repeat
 		success, response = pcall(function()
-			TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
+			TeleportService:TeleportToPlaceInstance(_ID, Server)
 		end)
 
 		if not success then
 			warn("Failed to teleport! Error: " .. tostring(response))
 			--task.wait(1)
 		end
-	until success
-	
+	until Server ~= nil or success
+
+	warn(Server)
 	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
 end
 
