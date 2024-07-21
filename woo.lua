@@ -1044,7 +1044,7 @@ function FindServer()
 	repeat
 		local Server = NewServer()
 		if not Server then
-			SetStatus("No available servers, retrying...")
+			warn("No available servers, retrying...")
 			task.wait(1)
 		else
 			success, response = pcall(function()
@@ -1052,7 +1052,7 @@ function FindServer()
 			end)
 			
 			if not success then
-				SetStatus("Failed to teleport! Retrying...")
+				warn("Failed to teleport! Retrying...")
 				task.wait(1)
 			end
 		end
