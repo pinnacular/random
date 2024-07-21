@@ -1003,21 +1003,13 @@ end]]
 
 function FindServer()
 	local _ID = game.PlaceId
-	local _SERVERLIST = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=100", _ID, (Settings.SmallServer and "Asc") or (not Settings.SmallServer and "Dec"))
+	local SortOrder = Settings.SmallServer and "Asc" or "Dec"
+	local _SERVERLIST = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=100", _ID, SortOrder)
 	local TotalTime = tick()
 
 	function ListServers(cursor)
-		local success, response = pcall(function()
-			local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
-			return HttpService:JSONDecode(Raw)
-		end)
-
-		if success then
-			return response
-		else
-			warn("Failed to list servers: " .. tostring(response))
-			return nil
-		end
+		local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
+		return HttpService:JSONDecode(Raw)
 	end
 
 	function ShuffleServers(servers) -- ft. chatgpt
@@ -1035,8 +1027,7 @@ function FindServer()
 		Next = Servers.nextPageCursor
 		
 		if Servers and Servers.data then
-			Next = Servers.nextPageCursor
-			ShuffleServers(Servers.data)
+			--ShuffleServers(Servers.data)
 			for _, serv in ipairs(Servers.data) do
 				if serv.playing < serv.maxPlayers - 6 then
 					FoundServer = serv.id
@@ -1053,21 +1044,18 @@ function FindServer()
 	local success, response
 	repeat
 		local Server = NewServer()
-		if not Server then
-			warn("No available servers, retrying...")
+
+		success, response = pcall(function()
+			TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
+		end)
+		
+		if not success then
+			warn("Failed to teleport! Error: " .. tostring(response))
 			--task.wait(1)
-		else
-			success, response = pcall(function()
-				TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
-			end)
-			
-			if not success then
-				warn("Failed to teleport! Error: " .. tostring(response))
-				--task.wait(1)
-			end
 		end
 	until success
 
+	warn(Server)
 	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
 end
 
@@ -1113,8 +1101,8 @@ local function ServerSwitch()
 				queue_on_teleport(Queue)
 			end
 		end)]]
-		FindServer()
-    end
+	end
+	FindServer()
 	--[[GetRejoinPrefferedFunction({
 		SizeSort = "asc",
 		MinPlayers = (Settings.SmallServer and 1 or 12),
