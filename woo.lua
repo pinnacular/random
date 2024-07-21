@@ -1060,8 +1060,7 @@ function FindServer()
 	until Server ~= nil
 
 	warn(Server)
-	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
-
+	
 	local success, response
 	repeat
 		success, response = pcall(function()
@@ -1072,7 +1071,9 @@ function FindServer()
 			warn("Failed to teleport! Error: " .. tostring(response))
 			--task.wait(1)
 		end
-	end
+	until success
+	
+	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
 end
 
 local Queued = false
