@@ -1058,7 +1058,7 @@ function FindServer()
 			warn("Failed to teleport! Error: " .. tostring(response))
 			--task.wait(1)
 		end]]
-	until Server
+	until Server ~= nil
 
 	warn(Server)
 	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
