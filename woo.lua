@@ -1024,8 +1024,6 @@ function FindServer()
 	function NewServer()
 		local Servers = ListServers(Next)
 		local FoundServer
-
-		Next = Servers.nextPageCursor
 		
 		if Servers and Servers.data then
 			ShuffleServers(Servers.data)
@@ -1035,6 +1033,7 @@ function FindServer()
 					break
 				end
 			end
+			Next = Servers.nextPageCursor
 		else
 			warn("No server data was retrieved, weird")
 		end
@@ -1057,9 +1056,10 @@ function FindServer()
 
 		if not success then
 			warn("Failed to teleport! Error: " .. tostring(response))
+			Server = nil
 			--task.wait(1)
 		end
-	until Server ~= nil or success
+	until Server ~= nil and success
 
 	warn(Server)
 	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
