@@ -1042,8 +1042,11 @@ function FindServer()
 	end
 
 	local success, response
+	local Server
 	repeat
-		local Server = NewServer()
+		Server = NewServer()
+
+		if not Server then 
 
 		success, response = pcall(function()
 			TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
@@ -1057,6 +1060,7 @@ function FindServer()
 
 	warn(Server)
 	SetStatus("Found Server! Time: " .. tostring(tick() - TotalTime):sub(1, 6) .. "s")
+	TeleportService:TeleportToPlaceInstance(_ID, Server, Player)
 end
 
 local Queued = false
