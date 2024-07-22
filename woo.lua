@@ -2093,9 +2093,10 @@ end
 
 RobberyData.CargoShip.Callback = function()
 	if not Settings.IncludeCargoShip then return end
-	if not GetVehiclePacket() and GetVehicleType() ~= "Heli" then
+	if not GetVehiclePacket() and GetVehicleType() ~= "Heli" and RobberyData.CargoShip.Open then
 		ExitVehicle()
 		SetStatus("Getting a helicopter..")
+
 		for i, v in pairs(Workspace.Vehicles:GetChildren()) do
 			if v.Name == "Heli" and v.PrimaryPart and v.Seat and not v.Seat.Player.Value and not v:GetAttribute("Locked") and not Raycast(v.Seat.Position, RayDirections.High) then
 				VehicleTP(v.PrimaryPart.CFrame, true)
@@ -2115,6 +2116,11 @@ RobberyData.CargoShip.Callback = function()
 
 				if GetVehiclePacket() then
 					break
+				end
+
+				if not RobberyData.CargoShip.Open and not RobberyData.CargoShip.Robbed then
+					SetStatus("Cargo Ship broke, switching servers..")
+					ServerSwitch()
 				end
 			end
 		end
