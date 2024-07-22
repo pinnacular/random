@@ -1770,6 +1770,9 @@ end)
 local function WaitForReward()
 	if Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
 		while Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") do
+			if not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+				break
+			end
 			task.wait()
 		end
 	end
@@ -2255,7 +2258,7 @@ RobberyData.Airdrop.Callback = function(drop)
 	SetStatus("Waiting for reward..")
 	WaitForReward()
 
-	drop:Destroy()
+	if drop then drop:Destroy() end
 end
 
 repeat task.wait(0.1) until Character and Humanoid and Root
