@@ -716,6 +716,8 @@ AddSwitch("Auto FPS Boost", Settings.AutoBoostFPS, function(bool)
 	SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
 end)
 
+warn("pass 1") -- debug pass
+
 CloseBtn.MouseButton1Click:Connect(function()
 	FarmUI.Enabled = false
 end)
@@ -1149,6 +1151,8 @@ task.delay(10, function()
 		ServerSwitch()
 	end
 end)
+
+warn("pass 2")
 
 -------------------->> Client Modules <<--------------------
 
@@ -1911,6 +1915,8 @@ if not FinishedRendering then
 	end
 end
 
+warn("pass 3")
+
 -------------------->> idk but robbery callback <<--------------------
 
 RobberyData.Mansion.Callback = function()
@@ -2333,6 +2339,9 @@ task.spawn(function()
 		end
 	end
 end)
+
+warn("pass 4")
+
 task.spawn(function()
 	if not Settings.AutoBoostFPS then return end
 	Workspace.Terrain.WaterWaveSize = 0
@@ -2456,6 +2465,8 @@ end
 if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
+
+warn("pass 5")
 
 repeat task.wait() until FinishedRendering
 
