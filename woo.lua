@@ -1716,6 +1716,8 @@ local RobberyData = {
 	}
 }
 
+warn("pass 3")
+
 for i, v in pairs(RobberyState:GetChildren()) do
 	for i2, v2 in pairs(RobberyData) do
 		if v.Name == tostring(v2.ID) then
@@ -1860,6 +1862,8 @@ local TargetedLocations = {
 	Vector3.new(2698, 39, -5365) 
 }
 
+warn("pass 4")
+
 local function LoadMap()
 	Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
 	for i, Position in pairs(TargetedLocations) do
@@ -1935,6 +1939,8 @@ if not FinishedRendering then
 		end
 	end
 end
+
+warn("pass 5")
 
 -------------------->> idk but robbery callback <<--------------------
 
