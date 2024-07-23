@@ -1173,7 +1173,7 @@ task.delay(10, function()
 	end
 end)
 
-warn("pass 2")
+--warn("pass 2")
 
 -------------------->> Client Modules <<--------------------
 
@@ -1716,7 +1716,7 @@ local RobberyData = {
 	}
 }
 
-warn("pass 3")
+--warn("pass 3")
 
 for i, v in pairs(RobberyState:GetChildren()) do
 	for i2, v2 in pairs(RobberyData) do
@@ -1862,7 +1862,7 @@ local TargetedLocations = {
 	Vector3.new(2698, 39, -5365) 
 }
 
-warn("pass 4")
+--warn("pass 4")
 
 local function LoadMap()
 	Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
@@ -1940,7 +1940,7 @@ if not FinishedRendering then
 	end
 end
 
-warn("pass 5")
+--warn("pass 5")
 
 -------------------->> idk but robbery callback <<--------------------
 
@@ -1962,7 +1962,7 @@ RobberyData.Mansion.Callback = function()
 	local FailMansion = false
 	local FailedStart = false
 
-	task.delay(10, function()
+	task.delay(15, function()
 		FailMansion = true
 	end)
 
