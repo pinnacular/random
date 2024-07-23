@@ -2122,7 +2122,7 @@ RobberyData.Mansion.Callback = function()
 	repeat task.wait() until PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 	WaitForReward()
-	task.wait(0.5)
+	task.wait(1.25)
 end
 
 RobberyData.CargoShip.Callback = function()
