@@ -115,7 +115,6 @@ local Settings = {
 	CollectCash                 = true,
 	AutoOpenSafes               = true,
 	SmallServer                 = true,
-	WebhookURL                  = "",
 }
 
 local SettingsFile = LoadFile("AutoCrateSettings.json")
@@ -127,15 +126,19 @@ if SettingsFile then
 
 	if Success then
 		for i, v in pairs(Data) do
-			Settings[i] = v
-			print("Updated " .. i .. " to " .. tostring(v))
+			if Settings[i] ~= nil then
+				Settings[i] = v
+				print("Updated " .. i .. " to " .. tostring(v))
+			end
 		end
+	else
+		print("settings file decoding failed")
 	end
 end
 
-table.foreach(Settings, function(i, v)
+for i, v in pairs(Settings) do
 	print(i .. ": " .. tostring(v))
-end)
+end
 
 -------------------->> Client Player <<--------------------
 
