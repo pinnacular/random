@@ -642,7 +642,7 @@ local function AddSwitch(name, default, callback)
 		TextSize = 18,
 	})
 
-	local UICorner = CreateInstance("UICorner", Switch, {
+	CreateInstance("UICorner", Switch, {
 		CornerRadius = UDim.new(0, 4),
 	})
 
@@ -653,13 +653,13 @@ local function AddSwitch(name, default, callback)
 		Position = UDim2.new(1.20000005, 0, 0, 0),
 		Size = UDim2.new(0, 20, 0, 20),
 		Font = Enum.Font.SourceSansBold,
-		Text = "Switch",
+		Text = name,
 		TextColor3 = Color3.new(0.784314, 0.784314, 0.784314),
 		TextSize = 16,
 		TextXAlignment = Enum.TextXAlignment.Left,
 	})
 
-	Switch:FindFirstChild("Title").Text = name
+	--Switch:FindFirstChild("Title").Text = name
 
 	if default then
 		Switch.Text = utf8.char(10003)
@@ -668,15 +668,16 @@ local function AddSwitch(name, default, callback)
 
 
 	local Toggled = default
+	if default then pcall(callback, default) end
+	
 	Switch.MouseButton1Click:Connect(function()
 		Toggled = not Toggled
 		Switch.Text = Toggled and utf8.char(10003) or ""
 		pcall(callback, Toggled)
 	end)
-
 end
 
-AddSwitch("Rob Crates", Settings.IncludeAirdrops, function(bool)
+--[[AddSwitch("Rob Crates", Settings.IncludeAirdrops, function(bool)
 	Settings.IncludeAirdrops = bool
 	SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
 end)
@@ -714,9 +715,29 @@ end)
 AddSwitch("Auto FPS Boost", Settings.AutoBoostFPS, function(bool)
 	Settings.AutoBoostFPS = bool
 	SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
-end)
+end)]]
 
-warn("pass 1") -- debug pass
+local SettingSwitches = {
+	{"Rob Crates", "IncludeAirdrops"},
+	{"Rob Cargo Ship", "IncludeCargoShip"},
+	{"Rob Mansion", "IncludeMansion"},
+	{"Prefer Small Servers", "SmallServer"},
+	{"Collect Dropped Cash", "CollectCash"},
+	{"Hide In Crate", "HideInCrate"},
+	{"Auto Open Safes", "AutoOpenSafes"},
+	{"Auto FPS Boost", "AutoBoostFPS"},
+}
+
+for i, v in ipairs(SettingSwitches) do
+	local SwitchName, Switch = unpack(v)
+
+	AddSwitch(SwitchName, Settings[Switch], function(bool)
+		if Settings[Swtich] ~= bool then
+			Settings[Switch] = bool
+			SaveFile("AutoCrateSettings.json", HttpService:JSONEncode(Settings))
+		end
+	end)
+end
 
 CloseBtn.MouseButton1Click:Connect(function()
 	FarmUI.Enabled = false
@@ -1915,8 +1936,6 @@ if not FinishedRendering then
 	end
 end
 
-warn("pass 3")
-
 -------------------->> idk but robbery callback <<--------------------
 
 RobberyData.Mansion.Callback = function()
@@ -2340,8 +2359,6 @@ task.spawn(function()
 	end
 end)
 
-warn("pass 4")
-
 task.spawn(function()
 	if not Settings.AutoBoostFPS then return end
 	Workspace.Terrain.WaterWaveSize = 0
@@ -2466,9 +2483,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-warn("pass 5")
-
-repeat task.wait() until FinishedRendering
+repeat task.wait() until FinishedRendering and not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
