@@ -1028,7 +1028,7 @@ function FindServer()
 		if Servers and Servers.data then
 			ShuffleServers(Servers.data)
 			for _, serv in ipairs(Servers.data) do
-				if serv.playing < serv.maxPlayers - 6 then
+				if serv.playing < serv.maxPlayers - 3 then
 					FoundServer = serv.id
 					break
 				end
