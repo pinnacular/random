@@ -2302,10 +2302,6 @@ while Humanoid == nil do
 	task.wait(0.1)
 end
 
-SetStatus("Waiting for guns..")
-repeat task.wait() until RetrievedGuns
-LoadMap()
-
 IsLoaded = true
 
 task.spawn(function()
@@ -2418,6 +2414,10 @@ task.spawn(function()
 		end
 	end
 end)
+
+SetStatus("Waiting for guns..")
+repeat task.wait() until RetrievedGuns
+LoadMap()
 
 --[[if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	SetStatus("Waiting for guns..")
