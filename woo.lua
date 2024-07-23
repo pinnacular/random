@@ -2119,7 +2119,7 @@ RobberyData.Mansion.Callback = function()
 	EquipGun(false)
 
 	SetStatus("Waiting for reward..")
-	--repeat task.wait() until PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+	repeat task.wait() until PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 	WaitForReward()
 	task.wait(0.5)
