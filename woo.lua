@@ -2424,6 +2424,8 @@ end)
 SetStatus("Waiting for guns..")
 repeat task.wait() until RetrievedGuns
 
+print("Include Airdrops ", Settings.IncludeAirdrops)
+
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
 end
