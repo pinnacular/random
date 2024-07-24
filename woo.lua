@@ -2423,13 +2423,10 @@ end)
 
 SetStatus("Waiting for guns..")
 repeat task.wait() until RetrievedGuns
-LoadMap()
 
---[[if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
-	SetStatus("Waiting for guns..")
-	repeat task.wait() until RetrievedGuns
+if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
-end]]
+end
 
 Humanoid.Died:Connect(function()
 	if not FinishedRendering then
@@ -2493,7 +2490,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-repeat task.wait() until FinishedRendering and not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+repeat task.wait() until RetrievedGuns and not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
