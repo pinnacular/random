@@ -2319,12 +2319,16 @@ task.spawn(function()
 		end)
 		if IsArrested() then
 			SetStatus("You're arrested, switching servers..")
-			WaitForReward()
+			
+			if Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+				repeat task.wait() until not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+			end
+			--WaitForReward()
 
 			ServerSwitch()
-			task.delay(2, function()
+			--[[task.delay(2, function()
 				Humanoid.Health = 0
-			end)
+			end)]]
 		end
 
 		if GetClosestAirdrop() then
