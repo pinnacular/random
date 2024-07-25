@@ -2485,6 +2485,8 @@ task.spawn(function()
 end)
 
 SetStatus("Waiting for guns..")
+print(Backpack:FindFirstChild("Pistol"))
+warn(Backpack:FindFirstChild("Pistol"))
 repeat task.wait() until Backpack:FindFirstChild("Pistol")
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
