@@ -2421,15 +2421,6 @@ task.spawn(function()
 	end
 end)
 
-SetStatus("Waiting for guns..")
-repeat task.wait() until RetrievedGuns
-
---print("Include Airdrops", Settings.IncludeAirdrops)
-
-if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
-	LoadMap()
-end
-
 Humanoid.Died:Connect(function()
 	if not FinishedRendering then
 		SetStatus("Cop killed you, switching servers..")
@@ -2471,6 +2462,13 @@ task.spawn(function()
 		ServerSwitch()
 	end
 end)
+
+SetStatus("Waiting for guns..")
+repeat task.wait() until RetrievedGuns
+
+if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
+	LoadMap()
+end
 
 if RobberyData.CargoShip.Open then
 	warn(pcall(RobberyData.CargoShip.Callback))
