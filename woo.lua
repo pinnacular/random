@@ -1811,9 +1811,9 @@ end)
 -------------------->> Miscanellous Functions <<--------------------
 
 local function WaitForReward()
-	if Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
-		while Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") do
-			if not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+	if PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+		while PlayerGui.AppUI:FindFirstChild("RewardSpinner") do
+			if not PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
 				break
 			end
 			task.wait()
@@ -2309,7 +2309,11 @@ RobberyData.Airdrop.Callback = function(drop)
 	end
 
 	SetStatus("Waiting for reward..")
-	WaitForReward()
+
+	if PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+		repeat task.wait() until not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+	end
+	--WaitForReward()
 
 	if drop then drop:Destroy() end
 end
@@ -2333,8 +2337,8 @@ task.spawn(function()
 		if IsArrested() then
 			SetStatus("You're arrested, switching servers..")
 			
-			if Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
-				repeat task.wait() until not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+			if PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+				repeat task.wait() until not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 			end
 			--WaitForReward()
 
@@ -2507,7 +2511,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-repeat task.wait() until RetrievedGuns and not Player.PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+repeat task.wait() until RetrievedGuns and not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
