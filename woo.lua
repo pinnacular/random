@@ -1036,7 +1036,16 @@ function FindServer()
 
 	function ListServers(cursor)
 		local Raw = game:HttpGet(_SERVERLIST .. ((cursor and "&cursor="..cursor) or ""))
-		return HttpService:JSONDecode(Raw)
+		local success, response = pcall(function()
+			return HttpService:JSONDecode(Raw)
+		end)
+		
+		if success then
+			return response
+		else
+			warn("cant parse json: " .. tostring(response))
+			return nil
+		end
 	end
 
 	function ShuffleServers(servers) -- ft. chatgpt
@@ -1048,8 +1057,12 @@ function FindServer()
 	
 	local Next
 	function NewServer()
-		local Servers = ListServers(Next)
+		local Servers --= ListServers(Next)
 		local FoundServer
+		
+		repeat 
+			Servers = ListServers(Next)
+		until Servers ~= nil
 		
 		if Servers and Servers.data then
 			ShuffleServers(Servers.data)
