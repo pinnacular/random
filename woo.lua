@@ -2532,7 +2532,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-repeat task.wait() until RetrievedGuns and not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+repeat task.wait() until Backpack:FindFirstChild(SelectedGun) and not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
