@@ -1947,7 +1947,7 @@ if not FinishedRendering then
 				end
 
            			fireclickdetector(v)
-				task.wait(0.7)
+				--task.wait(0.7)
    			end
 		end
 	end
