@@ -2481,7 +2481,7 @@ task.spawn(function()
 end)
 
 SetStatus("Waiting for guns..")
-repeat task.wait() until RetrievedGuns
+repeat task.wait() until RetrievedGuns or Backpack:FindFirstChild(SelectedGun)
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
