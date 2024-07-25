@@ -2485,9 +2485,24 @@ task.spawn(function()
 end)
 
 SetStatus("Waiting for guns..")
-print(Backpack:FindFirstChild("Pistol"))
-warn(Backpack:FindFirstChild("Pistol"))
-repeat task.wait() until Backpack:FindFirstChild("Pistol")
+
+local RetrievedGuns = false
+if not FinishedRendering then
+	for i,v in pairs(workspace:GetDescendants()) do
+        	if v:IsA("ClickDetector") then
+			local ParentName = tostring(v.Parent)
+			if ParentName == "Criminal" then
+				if Backpack:FindFirstChild(SelectedGun) then
+					RetrievedGuns = true
+					break 
+				end
+
+           			fireclickdetector(v)
+				--task.wait(0.7)
+   			end
+		end
+	end
+end
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
