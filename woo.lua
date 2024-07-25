@@ -2134,7 +2134,11 @@ RobberyData.Mansion.Callback = function()
 	SetStatus("Waiting for reward..")
 	repeat task.wait() until PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
-	WaitForReward()
+	if PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+		repeat task.wait() until not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+	end
+
+	--WaitForReward()
 	task.wait(1.25)
 end
 
