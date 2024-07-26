@@ -2489,24 +2489,7 @@ task.spawn(function()
 end)
 
 SetStatus("Waiting for guns..")
-
-local RetrievedGuns = false
-if not FinishedRendering then
-	for i,v in pairs(workspace:GetDescendants()) do
-        	if v:IsA("ClickDetector") then
-			local ParentName = tostring(v.Parent)
-			if ParentName == "Criminal" then
-				if Backpack:FindFirstChild(SelectedGun) then
-					RetrievedGuns = true
-					break 
-				end
-
-           			fireclickdetector(v)
-				--task.wait(0.7)
-   			end
-		end
-	end
-end
+repeat task.wait() until Backpack:FindFirstChild(SelectedGun)
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
@@ -2532,7 +2515,7 @@ if RobberyData.Mansion.Open then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
-repeat task.wait() until Backpack:FindFirstChild(SelectedGun) and not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
+repeat task.wait() until not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 SetStatus("No more robberies, finding server..")
 ServerSwitch()
