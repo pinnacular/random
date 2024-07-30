@@ -15,7 +15,7 @@
 -------------------->> Luraph & Luarmor Macros <<--------------------
 
 if not LPH_OBFUSCATED then
-	script_key                  = "mCmIgbiDYBXSQGtBwuMqIdvjOofcXUbW"
+	script_key                  = "1"
 	LRM_UserNote                = "Not specified"
 	LRM_ScriptName              = "Auto Crate"
 	LRM_SecondsLeft             = math.huge
@@ -2131,10 +2131,19 @@ RobberyData.Mansion.Callback = function()
 	BodyVelocity:Destroy()
 	EquipGun(false)
 
+	local BrokenReward = true -- ping fucks you up man
 	SetStatus("Waiting for reward..")
+
+	task.delay(10, function()
+		if BrokenReward then
+			ServerSwitch()
+    		end
+	end)
+
 	repeat task.wait() until PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 
 	if PlayerGui.AppUI:FindFirstChild("RewardSpinner") then
+		BrokenReward = false
 		repeat task.wait() until not PlayerGui.AppUI:FindFirstChild("RewardSpinner")
 	end
 
