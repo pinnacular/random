@@ -1121,10 +1121,10 @@ local function ServerSwitch()
 		-- bro why
 		-- queue on teleport is completely bricked
 		
-		--[[local StartMoney = getgenv().StartingMoney
+		local StartMoney = getgenv().StartingMoney
 		local StartTime = getgenv().StartingTime
 		
-		--local Queue = tostring([[getgenv().StartingMoney = .. StartMoney .. [[; getgenv().StartingTime = .. StartTime .. [[;
+		local Queue = tostring([[getgenv().StartingMoney = .. StartMoney .. [[; getgenv().StartingTime = .. StartTime .. [[;
 				
 			local success, error = pcall(function()
 				loadstring(game:HttpGet(GithubLink))()
@@ -1139,13 +1139,13 @@ local function ServerSwitch()
 					loadstring(readfile(" .. ScriptFile .. [["))()
 				end
 			end
-		
+		]])
 		
 		Player.OnTeleport:Connect(function(State)
 			if State == Enum.TeleportState.Started then	
 				queue_on_teleport(Queue)
 			end
-		end)]]
+		end)
 	end
 	FindServer()
 	--[[GetRejoinPrefferedFunction({
