@@ -2509,6 +2509,10 @@ if Settings.IncludeMansion and RobberyData.Mansion.Open then
 		end
 	--end
 
+	if Backpack:FindFirstChild(SelectedGun) then
+		RetrievedGuns = true
+	end
+
 	repeat task.wait() until Backpack:FindFirstChild(SelectedGun) or RetrievedGuns
 end
 
