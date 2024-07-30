@@ -1939,8 +1939,8 @@ local RetrievedGuns = false
 if not FinishedRendering then
 	for i,v in pairs(workspace:GetDescendants()) do
         	if v:IsA("ClickDetector") then
-			local ParentName = tostring(v.Parent)
-			if ParentName == "Criminal" then
+			--local ParentName = tostring(v.Parent)
+			--if ParentName == "Criminal" then
 				if Backpack:FindFirstChild(SelectedGun) then
 					RetrievedGuns = true
 					break 
@@ -1948,7 +1948,7 @@ if not FinishedRendering then
 
            			fireclickdetector(v)
 				--task.wait(0.7)
-   			end
+   			--end
 		end
 	end
 end
@@ -2488,8 +2488,10 @@ task.spawn(function()
 	end
 end)
 
-SetStatus("Waiting for guns..")
-repeat task.wait() until Backpack:FindFirstChild(SelectedGun)
+if Settings.IncludeMansion and RobberyData.Mansion.Open then
+	SetStatus("Waiting for guns..")
+	repeat task.wait() until Backpack:FindFirstChild(SelectedGun) or RetrievedGuns
+end
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
