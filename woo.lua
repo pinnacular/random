@@ -1939,8 +1939,8 @@ local RetrievedGuns = false
 if not FinishedRendering then
 	for i,v in pairs(workspace:GetDescendants()) do
         	if v:IsA("ClickDetector") then
-			--local ParentName = tostring(v.Parent)
-			--if ParentName == "Criminal" then
+			local ParentName = tostring(v.Parent)
+			if ParentName == "Criminal" or ParentName == "Station" then
 				if Backpack:FindFirstChild(SelectedGun) then
 					RetrievedGuns = true
 					break 
@@ -1948,7 +1948,7 @@ if not FinishedRendering then
 
            			fireclickdetector(v)
 				--task.wait(0.7)
-   			--end
+   			end
 		end
 	end
 end
