@@ -1935,7 +1935,7 @@ end
 
 -- maybe i dont call getpistol at all?
 -- im onto something
-local RetrievedGuns = false
+--[[local RetrievedGuns = false
 if not FinishedRendering then
 	for i,v in pairs(workspace:GetDescendants()) do
         	if v:IsA("ClickDetector") then
@@ -1951,7 +1951,7 @@ if not FinishedRendering then
    			end
 		end
 	end
-end
+end]]
 
 --warn("pass 5")
 
@@ -2488,8 +2488,27 @@ task.spawn(function()
 	end
 end)
 
+local RetrievedGuns = false
 if Settings.IncludeMansion and RobberyData.Mansion.Open then
 	SetStatus("Waiting for guns..")
+
+	--if not FinishedRendering then
+		for i,v in pairs(workspace:GetDescendants()) do
+        		if v:IsA("ClickDetector") then
+				local ParentName = tostring(v.Parent)
+				if ParentName == "Criminal" or ParentName == "Station" then
+					if Backpack:FindFirstChild(SelectedGun) then
+						RetrievedGuns = true
+						break 
+					end
+
+           				fireclickdetector(v)
+					--task.wait(0.7)
+   				end
+			end
+		end
+	--end
+
 	repeat task.wait() until Backpack:FindFirstChild(SelectedGun) or RetrievedGuns
 end
 
