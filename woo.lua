@@ -2498,7 +2498,7 @@ task.spawn(function()
 end)
 
 local RetrievedGuns = false
-if Settings.IncludeMansion and RobberyData.Mansion.Open then
+--if Settings.IncludeMansion and RobberyData.Mansion.Open then
 	SetStatus("Waiting for guns..")
 
 	--if not FinishedRendering then
@@ -2523,7 +2523,7 @@ if Settings.IncludeMansion and RobberyData.Mansion.Open then
 	end
 
 	repeat task.wait() until Backpack:FindFirstChild(SelectedGun) or RetrievedGuns
-end
+--end
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
