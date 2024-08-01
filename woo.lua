@@ -1124,9 +1124,9 @@ local function ServerSwitch()
 		local StartMoney = getgenv().StartingMoney
 		local StartTime = getgenv().StartingTime
 		
-		local Queue = tostring([[getgenv().StartingMoney = .. StartMoney .. [[; getgenv().StartingTime = .. StartTime .. [[;
+		--local Queue = tostring([[getgenv().StartingMoney = .. StartMoney .. [[; getgenv().StartingTime = .. StartTime .. [[;
 				
-			local success, error = pcall(function()
+			--[[local success, error = pcall(function()
 				loadstring(game:HttpGet(GithubLink))()
 			end)
 			
@@ -1141,11 +1141,11 @@ local function ServerSwitch()
 			end
 		]])
 		
-		Player.OnTeleport:Connect(function(State)
+		--[[Player.OnTeleport:Connect(function(State)
 			if State == Enum.TeleportState.Started then	
 				queue_on_teleport(Queue)
 			end
-		end)
+		end)]]
 	end
 	FindServer()
 	--[[GetRejoinPrefferedFunction({
