@@ -2498,7 +2498,7 @@ task.spawn(function()
 end)
 
 local RetrievedGuns = false
---if Settings.IncludeMansion and RobberyData.Mansion.Open then
+if Settings.IncludeMansion then
 	SetStatus("Waiting for guns..")
 
 	--if not FinishedRendering then
@@ -2523,7 +2523,7 @@ local RetrievedGuns = false
 	end
 
 	repeat task.wait() until Backpack:FindFirstChild(SelectedGun) or RetrievedGuns
---end
+end
 
 if Settings.IncludeAirdrops and not Workspace:FindFirstChild("Drop") then
 	LoadMap()
@@ -2545,7 +2545,7 @@ if GetClosestAirdrop() then
 	warn(pcall(RobberyData.Airdrop.Callback, GetClosestAirdrop()))
 end
 
-if RobberyData.Mansion.Open then
+if RobberyData.Mansion.Open and Backpack:FindFirstChild(SelectedGun) then
 	warn(pcall(RobberyData.Mansion.Callback))
 end
 
