@@ -1139,7 +1139,7 @@ local function ServerSwitch()
 					loadstring(readfile(" .. ScriptFile .. [["))()
 				end
 			end
-		]])
+		]]
 		
 		--[[Player.OnTeleport:Connect(function(State)
 			if State == Enum.TeleportState.Started then	
