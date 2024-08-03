@@ -1927,10 +1927,12 @@ local function ShootGun()
 	Modules.GunItem._attemptShoot(CurrentGun)
 end
 
-local function EquipGun(bool)
+local function EquipGun(int: number)
 	if not Backpack:FindFirstChild(SelectedGun) then return end
-	Backpack[SelectedGun]:SetAttribute("InventoryItemLocalEquipped", bool)
-	Backpack[SelectedGun].InventoryEquipRemote:FireServer(bool)
+	if int == not (0 or 1) then return end
+
+	Backpack[SelectedGun]:SetAttribute("InventoryItemLocalEquipped", int)
+	Backpack[SelectedGun].InventoryEquipRemote:FireServer(int)
 end
 
 -- maybe i dont call getpistol at all?
