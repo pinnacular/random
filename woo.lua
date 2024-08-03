@@ -2517,7 +2517,7 @@ if Settings.IncludeMansion then
 						break 
 					end
 
-           				repeat fireclickdetector(v) until Backpack:FindFirstChild(SelectedGun) or RetrievedGuns
+           				fireclickdetector(v)
 					--task.wait(0.7)
    				end
 			end
