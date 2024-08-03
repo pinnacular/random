@@ -2004,6 +2004,10 @@ RobberyData.Mansion.Callback = function()
 		wait(0.1)
 	until ElevatorDoor.Position.X > 3208
 
+	-- i hate this
+	EquipGun(true)
+	ShootGun()
+
 	for _, instance in pairs(MansionRobbery.Lasers:GetChildren()) do
 		instance:Remove()
 	end
@@ -2124,7 +2128,7 @@ RobberyData.Mansion.Callback = function()
 	SetStatus("Killing CEO Boss..")
 	while Player.Folder:FindFirstChild("Pistol") and BossCEO and BossCEO:FindFirstChild("HumanoidRootPart") and BossCEO.Humanoid.Health ~= 1 do
 		SetStatus("Killing ceo boss.. (" .. math.floor((OldHealth - BossCEO.Humanoid.Health) / OldHealth * 100) .. "%)")
-		EquipGun(true)
+		--EquipGun(true)
 		task.wait()
 		ShootGun()
 	end
