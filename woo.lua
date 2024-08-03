@@ -1932,7 +1932,7 @@ local function EquipGun(int: boolean)
 	local val = int and 1 or 0
 
 	Backpack[SelectedGun]:SetAttribute("InventoryItemLocalEquipped", val)
-	Backpack[SelectedGun].InventoryEquipRemote:FireServer(val)
+	Backpack[SelectedGun].InventoryEquipRemote:FireServer(int)
 end
 
 -- maybe i dont call getpistol at all?
