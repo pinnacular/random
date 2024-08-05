@@ -1228,9 +1228,9 @@ local Specs = Modules.UI.CircleAction.Specs
 local LaggedBack = false
 local BreakMove = 0
 local MovementSpeeds = {
-	HeliSpeed = (10000),
-	VehicleSpeed = 750,
-	FlightSpeed = (175),
+	HeliSpeed = (9000),
+	VehicleSpeed = 690,
+	FlightSpeed = (150),
 	PathSpeed = (180)
 }
 
