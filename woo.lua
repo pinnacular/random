@@ -1228,10 +1228,10 @@ local Specs = Modules.UI.CircleAction.Specs
 local LaggedBack = false
 local BreakMove = 0
 local MovementSpeeds = {
-	HeliSpeed = (9000),
-	VehicleSpeed = 690,
-	FlightSpeed = (150),
-	PathSpeed = (180)
+	HeliSpeed = (7900),
+	VehicleSpeed = 595,
+	FlightSpeed = (140),
+	PathSpeed = (160)
 }
 
 LPH_NO_VIRTUALIZE(function()
